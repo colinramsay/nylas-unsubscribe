@@ -1,7 +1,7 @@
 {Utils, React, MessageStore} = require 'nylas-exports'
 {RetinaImg} = require 'nylas-component-kit'
 
-class MyComposerButton extends React.Component
+class UnsubscribeButton extends React.Component
 
   @displayName: 'UnsubscribeButton'
 
@@ -47,4 +47,4 @@ class MyComposerButton extends React.Component
     return doc
 
 
-module.exports = MyComposerButton
+module.exports = UnsubscribeButton

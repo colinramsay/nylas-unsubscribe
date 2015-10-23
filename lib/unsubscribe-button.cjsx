@@ -3,8 +3,6 @@
 
 class MyComposerButton extends React.Component
 
-  # Note: You should assign a new displayName to avoid naming
-  # conflicts when injecting your item
   @displayName: 'UnsubscribeButton'
 
   componentWillMount: =>
@@ -23,7 +21,7 @@ class MyComposerButton extends React.Component
   _getMatch: =>
     message = MessageStore.items()[0]
     doc = @_parseHTML message.body
-    links = doc.getElementsByTagName('a')
+    links = doc.getElementsByTagName 'a'
 
     matches = (item for item in links when item.innerText.toLowerCase().indexOf('unsubscribe') > -1)
     matches[matches.length - 1]

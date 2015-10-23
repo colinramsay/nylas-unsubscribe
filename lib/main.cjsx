@@ -1,13 +1,13 @@
 {ComponentRegistry} = require 'nylas-exports'
 
-MyComposerButton = require './my-composer-button'
+UnsubscribeButton = require './unsubscribe-button'
 
 module.exports =
   # Activate is called when the package is loaded. If your package previously
   # saved state using `serialize` it is provided.
   #
   activate: (@state) ->
-    ComponentRegistry.register MyComposerButton,
+    ComponentRegistry.register UnsubscribeButton,
       role: 'MessageIndicator'
 
   # Serialize is called when your package is about to be unmounted.

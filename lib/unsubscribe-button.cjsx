@@ -11,7 +11,6 @@ class MyComposerButton extends React.Component
     @match = @_getMatch()
 
   render: =>
-    console.log @match
     if @match
       <div className="unsubscribe">
         <button className="btn btn-toolbar" onClick={ => @_onClick()} ref="button">
@@ -27,7 +26,6 @@ class MyComposerButton extends React.Component
     links = doc.getElementsByTagName('a')
 
     matches = (item for item in links when item.innerText.toLowerCase().indexOf('unsubscribe') > -1)
-    console.log matches
     matches[matches.length - 1]
 
   _onClick: =>

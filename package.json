@@ -1,0 +1,17 @@
+{
+  "name": "Message-Unsubscribe",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "atom": ">=0.3.17-8ae30d2"
+  },
+  "description": "Enter a description of your package!",
+  "dependencies": {
+    "request": "^2.65.0"
+  },
+  "license": "MIT"
+}

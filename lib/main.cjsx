@@ -3,9 +3,11 @@
 UnsubscribeButton = require './unsubscribe-button'
 
 module.exports =
-  activate: (@state) ->
+  activate: (@state={}) ->
     ComponentRegistry.register UnsubscribeButton,
-      role: 'MessageIndicator'
+      role: 'message:Toolbar'
 
   deactivate: ->
     ComponentRegistry.unregister(MyComposerButton)
+
+  serialize: -> @state

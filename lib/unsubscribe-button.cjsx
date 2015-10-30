@@ -1,32 +1,77 @@
-{Utils, React, MessageStore} = require 'nylas-exports'
-{RetinaImg} = require 'nylas-component-kit'
+classNames = require 'classnames'
+{Utils, React} = require 'nylas-exports'
+Unsubscriber = require('./unsubscriber')
+UnsubscriberStore = require('./unsubscriber-store')
+
 
 class UnsubscribeButton extends React.Component
 
   @displayName: 'UnsubscribeButton'
 
-  componentWillMount: =>
-    @match = @_getMatch()
+  constructor: (@props) ->
+    @state = @_getStateFromStores()
 
-  render: =>
-    if @match
-      <div className="unsubscribe">
-        <button className="btn btn-toolbar" onClick={ => @_onClick()} ref="button">
-          Unsubscribe!
-        </button>
-      </div>
-    else
-      null
+  render: ->
+    return null if @unsubscribeLink
 
-  _getMatch: =>
-    message = MessageStore.items()[0]
-    doc = @_parseHTML message.body
-    links = doc.getElementsByTagName 'a'
+    cs = classNames
+      "btn": true
+      "btn-toolbar": true
+      "disabled": @_isDisabled()
 
-    matches = (item for item in links when item.innerText.toLowerCase().indexOf('unsubscribe') > -1)
-    matches[matches.length - 1]
+    <button title={@_getTitle()} className={cs} onClick={ => @_onClick()} ref="button">
+      {@_getButtonText()}
+    </button>
+
+  componentDidMount: ->
+    @_unlisten = UnsubscriberStore.listen(@_onStoreChanged)
+
+  componentWillUnmount: ->
+    @_unlisten?()
+
+  _onStoreChanged: =>
+    @setState(@_getStateFromStores())
+
+  _getStateFromStores: ->
+    return {
+      listUnsubscribeByHttp: UnsubscriberStore.listUnsubscribeByHttp(),
+      listUnsubscribeByMail: UnsubscriberStore.listUnsubscribeByMail(),
+      unsubscribeLink: UnsubscriberStore.unsubscribeLink(),
+    }
+
+  _getTitle: ->
+    'Unsubscribe'
+
+  _isDisabled: ->
+    !@state.unsubscribeLink || !(@state.listUnsubscribeByMail || @listUnsubscribeByHttp)
+
+  _getButtonText: ->
+    'Unsubscribe'
+
+  _archiveEmail: ->
+    # todo
+
+  _canAutoUnsubscribe: ->
+    @state.listUnsubscribeByHttp || @state.listUnsubscribeByMail
 
   _onClick: =>
+    return if @_isDisabled()
+
+    console.log 'Attempting unsubscribe with', @state.listUnsubscribeByHttp, @state.listUnsubscribeByMail
+
+    if @_canAutoUnsubscribe()
+      console.log 'Unsubscribing automatically...'
+      success = @Unsubscriber.unsubscribe(@state.listUnsubscribeByHttp, @state.listUnsubscribeByMail)
+    else
+      console.log 'Unsubscribing via browser fallback...'
+      success = @_openBrowserFallback()
+
+    if success
+      @_archiveEmail
+    else
+      # display message
+
+  _openBrowserFallback: ->
     BrowserWindow = require('remote').require('browser-window')
     w = new BrowserWindow
       'node-integration': false,
@@ -34,17 +79,7 @@ class UnsubscribeButton extends React.Component
       'width': 700,
       'height': 600
 
-    w.loadUrl @match.href
-
-  _parseHTML: (text) ->
-    domParser = new DOMParser()
-    try
-      doc = domParser.parseFromString(text, "text/html")
-    catch error
-      text = "HTML Parser Error: #{error.toString()}"
-      doc = domParser.parseFromString(text, "text/html")
-      atom.emitError(error)
-    return doc
+    w.loadUrl @state.unsubscribeLink.href
 
 
 module.exports = UnsubscribeButton

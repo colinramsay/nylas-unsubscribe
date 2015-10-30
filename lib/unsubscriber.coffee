@@ -11,7 +11,6 @@ class Unsubscriber
       @unsubscribeByMail(mail)
     else if http
       @unsubscribeByHttp(http)
-    end
 
   unsubscribeByHttp: (http) =>
     # todo
@@ -26,7 +25,7 @@ class Unsubscriber
         subject: 'Unsubscribe'
         to: [{
           name: 'Unsubscribe'
-          email: @listUnsubscribeUrl
+          email: mail
         }]
       }
     })
@@ -38,4 +37,4 @@ class Unsubscriber
       console.log arguments
 
 
-module.exports = Unsubscriber
+module.exports = new Unsubscriber()

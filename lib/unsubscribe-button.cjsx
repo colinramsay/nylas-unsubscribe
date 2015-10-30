@@ -49,7 +49,7 @@ class UnsubscribeButton extends React.Component
     'Unsubscribe'
 
   _archiveEmail: ->
-    # todo
+    alert('Unsubscribe attempt complete.')
 
   _canAutoUnsubscribe: ->
     @state.listUnsubscribeByHttp || @state.listUnsubscribeByMail
@@ -61,12 +61,12 @@ class UnsubscribeButton extends React.Component
 
     if @_canAutoUnsubscribe()
       console.log 'Unsubscribing automatically...'
-      success = @Unsubscriber.unsubscribe(@state.listUnsubscribeByHttp, @state.listUnsubscribeByMail)
+      success = Unsubscriber.unsubscribe(@state.listUnsubscribeByHttp, @state.listUnsubscribeByMail)
     else
       console.log 'Unsubscribing via browser fallback...'
       success = @_openBrowserFallback()
 
-    if success
+    if true
       @_archiveEmail
     else
       # display message

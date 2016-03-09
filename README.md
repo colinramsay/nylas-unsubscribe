@@ -1,4 +1,6 @@
-## Unsubscribe Button
+## Deprecated! Please use: https://github.com/colinking/n1-unsubscribe
+
+### Unsubscribe Button
 
 An unsubscribe button for the Nylus N1 mail client. **Work in progress**.
 
